@@ -1496,7 +1496,7 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
         # todo: check playbility status, if premiere return dict of what we know already and mark it as premier so we can skip it later
         if playability_status['status'] == 'LIVE_STREAM_OFFLINE':
             self.to_screen("[!!!live_stream_error!!!] " + str(playability_status['status']))
-            return  # {'id':'ok_dude','title':'premiere','url':'url','format':['yo']}
+            return
         #-------------------------------------
         if playability_status.get('reason') == 'Sign in to confirm your age':
             pr = self._parse_json(try_get(compat_parse_qs(

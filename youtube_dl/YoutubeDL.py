@@ -1521,6 +1521,17 @@ class YoutubeDL(object):
                 if t.get('id') is None:
                     t['id'] = '%d' % i
 
+        ###===========================================================================================================
+        ### super_ahi_patch = self.params.get('daterange',DateRange(start="00010101", end="99991231"))
+        ### datedata = str(info_dict.get('upload_date', 'KLUM_OF_THE_KLUMMEST_KLUM'))
+        ### datedata_start = str(super_ahi_patch.start).replace("-","")
+        ### self.to_screen("[!!!upload_date!!!] " + datedata)
+        ### if datedata == 'KLUM_OF_THE_KLUMMEST_KLUM':
+        ###     return
+        ### elif int(datedata)<int(datedata_start):
+        ###     return
+        ###===========================================================================================================
+
         if self.params.get('list_thumbnails'):
             self.list_thumbnails(info_dict)
             return
