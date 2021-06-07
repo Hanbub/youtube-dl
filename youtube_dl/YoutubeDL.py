@@ -1040,6 +1040,7 @@ class YoutubeDL(object):
         x_forwarded_for = ie_result.get('__x_forwarded_for_ip')
 
         for i, entry in enumerate(entries, 1):
+            self.to_screen("*" * 50)
             self.to_screen('[download] Downloading video %s of %s' % (i, n_entries))
             # This __x_forwarded_for_ip thing is a bit ugly but requires
             # minimal changes
@@ -1068,7 +1069,7 @@ class YoutubeDL(object):
             #self.to_screen("[I'm ENTRY]: " + str(entry))
             #self.to_screen('[DOWNLOAD]: ' + str(download))
             #self.to_screen('[EXTRA]: ' + str(extra))
-            self.to_screen("*"*50)
+
 
 
 
@@ -1087,15 +1088,16 @@ class YoutubeDL(object):
             #  'cover_image_url': None,
             #  'likes': None,
             #  'categories': None,}
-            if 'upload_date' in entry_result:
+
+            if entry_result is not None and 'upload_date' in entry_result:
                 go_go_dataranger = self.params.get('daterange', DateRange(start="00010101", end="99991231"))
-                # self.to_screen(str(go_go_dataranger.start) + " -> " + str(go_go_dataranger.end))
+                #self.to_screen("UPLOAD_DATE: " + str(entry_result['upload_date']) + " : " + str(go_go_dataranger.start) + " -> " + str(go_go_dataranger.end))
                 go_go_dataranger_start = str(go_go_dataranger.start).replace("-", "")
                 self.to_screen("upload_date: " + str(entry_result['upload_date']) + " break_date: " + str(
                     go_go_dataranger_start))
                 if int(entry_result['upload_date']) < int(go_go_dataranger_start):
                     break
-            # if entry_result['upload_date']
+            #if entry_result['upload_date']
 
 
             # TODO: skip failed (empty) entries?
