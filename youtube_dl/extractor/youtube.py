@@ -1491,6 +1491,16 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
                 'player', {'videoId': video_id}, video_id)
 
         playability_status = player_response.get('playabilityStatus') or {}
+
+        # -------------------------------------
+        # HAN LOOK HERE (focus on _download_webpage)
+        # todo: check playbility status, if premiere return dict of what we know already and mark it as premier so we can skip it later
+        #self.to_screen('[LIVE_STATUS]: '+ str(playability_status))
+        if 'status' in playability_status and (playability_status['status'] == 'LIVE_STREAM_OFFLINE' or playability_status['status'] == 'LIVE_STREAM_OFFLINE'):
+           self.to_screen("[!!!live_stream_error!!!] " + str(playability_status['status']))
+           return
+        # -------------------------------------
+
         if playability_status.get('reason') == 'Sign in to confirm your age':
             pr = self._parse_json(try_get(compat_parse_qs(
                 self._download_webpage(

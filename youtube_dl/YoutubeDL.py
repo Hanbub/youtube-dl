@@ -1064,7 +1064,40 @@ class YoutubeDL(object):
                 self.to_screen('[download] ' + reason)
                 continue
 
+
+            #self.to_screen("[I'm ENTRY]: " + str(entry))
+            #self.to_screen('[DOWNLOAD]: ' + str(download))
+            #self.to_screen('[EXTRA]: ' + str(extra))
+            self.to_screen("*"*50)
+
+
+
             entry_result = self.__process_iterable_entry(entry, download, extra)
+
+            # HAN LOOK HERE
+            # TODO: print(entry_result) find key to fetch live and put it into exception
+            # TODO: do profile fetching
+            # {'bio': snippet_part.get('description'),
+            #  'videos': float(vid_count) if vid_count is not None else None,
+            #  'is_hidden_subscriber': stats_part.get('hiddenSubscriberCount', False),
+            #  'subscribers': float(sub_count) if sub_count is not None else None,
+            #  'total_views': float(total_views) if total_views is not None else None,
+            #  'name': snippet_part.get('title'),
+            #  'image': snippet_part['thumbnails']['high']['url'],
+            #  'cover_image_url': None,
+            #  'likes': None,
+            #  'categories': None,}
+            if 'upload_date' in entry_result:
+                go_go_dataranger = self.params.get('daterange', DateRange(start="00010101", end="99991231"))
+                # self.to_screen(str(go_go_dataranger.start) + " -> " + str(go_go_dataranger.end))
+                go_go_dataranger_start = str(go_go_dataranger.start).replace("-", "")
+                self.to_screen("upload_date: " + str(entry_result['upload_date']) + " break_date: " + str(
+                    go_go_dataranger_start))
+                if int(entry_result['upload_date']) < int(go_go_dataranger_start):
+                    break
+            # if entry_result['upload_date']
+
+
             # TODO: skip failed (empty) entries?
             playlist_results.append(entry_result)
         ie_result['entries'] = playlist_results
