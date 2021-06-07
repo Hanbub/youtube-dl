@@ -1065,20 +1065,6 @@ class YoutubeDL(object):
                 continue
 
             entry_result = self.__process_iterable_entry(entry, download, extra)
-
-            if entry_result is not None:
-                if entry_result['upload_date']:
-                    go_go_dataranger = self.params.get('daterange', DateRange(start="00010101", end="99991231"))
-                    # self.to_screen(str(go_go_dataranger.start) + " -> " + str(go_go_dataranger.end))
-                    go_go_dataranger_start = str(go_go_dataranger.start).replace("-", "")
-                    # self.to_screen(f"go_go_dataranger_start: {go_go_dataranger_start} | go_go_dataranger_end: {go_go_dataranger_end}")
-                    self.to_screen("upload_date: " + str(entry_result['upload_date']) + " break_date: " + str(
-                        go_go_dataranger_start))
-                    if int(entry_result['upload_date']) < int(go_go_dataranger_start):
-                        break
-
-
-
             # TODO: skip failed (empty) entries?
             playlist_results.append(entry_result)
         ie_result['entries'] = playlist_results
@@ -1520,17 +1506,6 @@ class YoutubeDL(object):
                     t['resolution'] = '%dx%d' % (t['width'], t['height'])
                 if t.get('id') is None:
                     t['id'] = '%d' % i
-
-        ###===========================================================================================================
-        ### super_ahi_patch = self.params.get('daterange',DateRange(start="00010101", end="99991231"))
-        ### datedata = str(info_dict.get('upload_date', 'KLUM_OF_THE_KLUMMEST_KLUM'))
-        ### datedata_start = str(super_ahi_patch.start).replace("-","")
-        ### self.to_screen("[!!!upload_date!!!] " + datedata)
-        ### if datedata == 'KLUM_OF_THE_KLUMMEST_KLUM':
-        ###     return
-        ### elif int(datedata)<int(datedata_start):
-        ###     return
-        ###===========================================================================================================
 
         if self.params.get('list_thumbnails'):
             self.list_thumbnails(info_dict)
