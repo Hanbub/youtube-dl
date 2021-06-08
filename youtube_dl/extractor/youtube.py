@@ -8,6 +8,7 @@ import os.path
 import random
 import re
 import traceback
+from datetime import datetime, timedelta
 
 from .common import InfoExtractor, SearchInfoExtractor
 from ..compat import (
@@ -24,6 +25,7 @@ from ..jsinterp import JSInterpreter
 from ..utils import (
     ExtractorError,
     clean_html,
+    DateRange,
     dict_get,
     float_or_none,
     int_or_none,
@@ -44,6 +46,46 @@ from ..utils import (
     urlencode_postdata,
     urljoin,
 )
+
+def from_timeago_to_date(timeago):
+    now_now = datetime.now()
+    if "ago" in timeago:
+        time_components = timeago.replace(" ago", "").split(" ")
+        number = int(time_components[0])
+        date_part = time_components[1]
+        if date_part == "hours" or date_part == "hour":
+            delta = timedelta(hours=number)
+        elif date_part == "days" or date_part == "day":
+            delta = timedelta(days=number)
+        elif date_part == "weeks" or date_part == "week":
+            delta = timedelta(days=number * 7)
+        elif date_part == "minutes" or date_part == "minute":
+            delta = timedelta(minutes=number)
+        elif date_part == "month" or date_part == "months":
+            delta = timedelta(days=number * 30)
+        elif date_part == "year" or date_part == "years":
+            delta = timedelta(days=number * 365)
+        else:
+            return None, None
+    else:
+        lowered = timeago.lower().strip()
+        if lowered == "just now":
+            delta = timedelta(minutes=1)
+        elif lowered == "yesterday":
+            delta = timedelta(days=1)
+        elif lowered == "last month":
+            delta = timedelta(days=30)
+        elif lowered == "last week":
+            delta = timedelta(days=7)
+        elif " " in lowered:
+            try:
+                return datetime.strptime(lowered, '%B %Y').date(),now_now
+            except Exception as e:
+                return None,None
+        else:
+            return None, None
+    #return (now_now - delta).isoformat(), now_now
+    return (now_now - delta).date(), now_now
 
 
 def parse_qs(url):
@@ -1493,15 +1535,18 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
         playability_status = player_response.get('playabilityStatus') or {}
 
         # -------------------------------------
-        # HAN LOOK HERE (focus on _download_webpage)
+        # HAN LOOK HERE (focus on _download_webpage) #fix tabs | custome exceptions
         # todo: check playbility status, if premiere return dict of what we know already and mark it as premier so we can skip it later
         if 'status' in playability_status  \
             and 'liveStreamability' in playability_status:
             if playability_status['status'] == 'LIVE_STREAM_OFFLINE':
                 self.to_screen("[live_stream_premiere] " + str(playability_status['status']))
+                raise Exception('premiere_scheduled')
             else:
                 self.to_screen("[live_stream_online] " + str(playability_status['status']))
-            return
+                raise Exception('stream_live_running')
+            #return
+
         # -------------------------------------
 
         if playability_status.get('reason') == 'Sign in to confirm your age':
@@ -2536,6 +2581,8 @@ class YoutubeTabIE(YoutubeBaseInfoExtractor):
             return YoutubeTabIE._build_continuation_query(continuation, ctp)
 
     def _entries(self, tab, item_id, webpage):
+        border_time_range = self._downloader.params.get('daterange', DateRange(start="00010101", end="99991231"))
+        #border_time_str = str(border_time_range).replace("-","")
         tab_content = try_get(tab, lambda x: x['content'], dict)
         if not tab_content:
             return
@@ -2685,6 +2732,15 @@ class YoutubeTabIE(YoutubeBaseInfoExtractor):
                 renderer = self._extract_grid_item_renderer(continuation_item)
                 if renderer:
                     grid_renderer = {'items': continuation_items}
+                    # ==================================================================================================
+                    # HAN LOOK
+                    if 'publishedTimeText' in renderer:
+                        tab_time_ago_simpletext = renderer['publishedTimeText'].get('simpleText')
+                        if tab_time_ago_simpletext:
+                            tab_time_ago = from_timeago_to_date(tab_time_ago_simpletext)[0]
+                            if tab_time_ago not in border_time_range:
+                                break
+                    # ==================================================================================================
                     for entry in self._grid_entries(grid_renderer):
                         yield entry
                     continuation = self._extract_continuation(grid_renderer)

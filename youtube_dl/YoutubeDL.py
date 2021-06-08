@@ -1065,14 +1065,6 @@ class YoutubeDL(object):
                 self.to_screen('[download] ' + reason)
                 continue
 
-
-            #self.to_screen("[I'm ENTRY]: " + str(entry))
-            #self.to_screen('[DOWNLOAD]: ' + str(download))
-            #self.to_screen('[EXTRA]: ' + str(extra))
-
-
-
-
             entry_result = self.__process_iterable_entry(entry, download, extra)
 
             # HAN LOOK HERE
@@ -1097,7 +1089,15 @@ class YoutubeDL(object):
                     date_range_inherence_start))
                 if int(entry_result['upload_date']) < int(date_range_inherence_start):
                     break
-            #if entry_result['upload_date']
+
+
+            #TODO: run throught the streams data if needed
+            #if entry_result is None:
+            #    entry_result = {
+            #        'id':entry['id'],
+            #        'title':entry['title']
+            #    }
+
 
 
             # TODO: skip failed (empty) entries?
