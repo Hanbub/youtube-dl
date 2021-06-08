@@ -1090,12 +1090,12 @@ class YoutubeDL(object):
             #  'categories': None,}
 
             if entry_result is not None and 'upload_date' in entry_result:
-                go_go_dataranger = self.params.get('daterange', DateRange(start="00010101", end="99991231"))
-                #self.to_screen("UPLOAD_DATE: " + str(entry_result['upload_date']) + " : " + str(go_go_dataranger.start) + " -> " + str(go_go_dataranger.end))
-                go_go_dataranger_start = str(go_go_dataranger.start).replace("-", "")
+                date_range_inherence = self.params.get('daterange', DateRange(start="00010101", end="99991231"))
+                #self.to_screen("UPLOAD_DATE: " + str(entry_result['upload_date']) + " : " + str(date_range_inherence.start) + " -> " + str(date_range_inherence.end))
+                date_range_inherence_start = str(date_range_inherence.start).replace("-", "")
                 self.to_screen("upload_date: " + str(entry_result['upload_date']) + " break_date: " + str(
-                    go_go_dataranger_start))
-                if int(entry_result['upload_date']) < int(go_go_dataranger_start):
+                    date_range_inherence_start))
+                if int(entry_result['upload_date']) < int(date_range_inherence_start):
                     break
             #if entry_result['upload_date']
 
@@ -1541,6 +1541,20 @@ class YoutubeDL(object):
                     t['resolution'] = '%dx%d' % (t['width'], t['height'])
                 if t.get('id') is None:
                     t['id'] = '%d' % i
+        # ==============================================================================================================
+        # HAN LOOK HERE
+        # todo: use self.params.get('date_Range') here and check if it's in range. if not return None
+
+        # ----code----
+        ### test_daterange_fetch = self.params.get('daterange',DateRange(start="00010101", end="99991231"))
+        ### datedata = str(info_dict.get('upload_date', 'null'))
+        ### datedata_start = str(test_daterange_fetch.start).replace("-","")
+        ### self.to_screen("[!!!UPLOAD_DATE!!!] " + datedata)
+        ### if datedata == 'null':
+        ###     return
+        ### elif int(datedata)<int(datedata_start):
+        ###     return
+        # ==============================================================================================================
 
         if self.params.get('list_thumbnails'):
             self.list_thumbnails(info_dict)
