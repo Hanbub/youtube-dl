@@ -1083,10 +1083,8 @@ class YoutubeDL(object):
 
             if entry_result is not None and 'upload_date' in entry_result:
                 date_range_inherence = self.params.get('daterange', DateRange(start="00010101", end="99991231"))
-                #self.to_screen("UPLOAD_DATE: " + str(entry_result['upload_date']) + " : " + str(date_range_inherence.start) + " -> " + str(date_range_inherence.end))
                 date_range_inherence_start = str(date_range_inherence.start).replace("-", "")
-                self.to_screen("upload_date: " + str(entry_result['upload_date']) + " break_date: " + str(
-                    date_range_inherence_start))
+                self.to_screen(f"upload_date: {entry_result['upload_date']} | break_date: {date_range_inherence_start}")
                 if int(entry_result['upload_date']) < int(date_range_inherence_start):
                     break
 

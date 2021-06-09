@@ -1540,13 +1540,11 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
         if 'status' in playability_status  \
             and 'liveStreamability' in playability_status:
             if playability_status['status'] == 'LIVE_STREAM_OFFLINE':
-                self.to_screen("[live_stream_premiere] " + str(playability_status['status']))
-                raise Exception('premiere_scheduled')
+                self.to_screen(f"[live_stream_premiere] {playability_status['status']}")
+                raise Exception(f'{url} premiere_scheduled')
             else:
-                self.to_screen("[live_stream_online] " + str(playability_status['status']))
-                raise Exception('stream_live_running')
-            #return
-
+                self.to_screen(f"[live_stream_online] {playability_status['status']}")
+                raise Exception(f'{url} stream_live_running')
         # -------------------------------------
 
         if playability_status.get('reason') == 'Sign in to confirm your age':
@@ -1587,7 +1585,7 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
             lambda x: self._html_search_meta(x, webpage, default=None)) \
             if webpage else lambda x: None
 
-        video_details = player_response.get('videoDetails') or {}
+        video_details = player_response.get('videoDetails') or {} #!!!!!!
         microformat = try_get(
             player_response,
             lambda x: x['microformat']['playerMicroformatRenderer'],

@@ -545,6 +545,13 @@ class InfoExtractor(object):
                 #        return {'id':url}
         except ExtractorError:
             raise
+        # ==============================================================================================================
+        # HAN LOOK HERE
+        except Exception as wtf:                             # ERROR CONTROL
+            if str(wtf).find('stream_live_running')!=-1:     # ERROR CONTROL
+                return                                       # ERROR CONTROL
+            elif str(wtf).find('premiere_scheduled') != -1:  # ERROR CONTROL
+                return                                       # ERROR CONTROL
         except compat_http_client.IncompleteRead as e:
             raise ExtractorError('A network error has occurred.', cause=e, expected=True)
         except (KeyError, StopIteration) as e:
