@@ -1070,16 +1070,16 @@ class YoutubeDL(object):
             # HAN LOOK HERE
             # TODO: print(entry_result) find key to fetch live and put it into exception
             # TODO: do profile fetching
-            # {'bio': snippet_part.get('description'),
-            #  'videos': float(vid_count) if vid_count is not None else None,
-            #  'is_hidden_subscriber': stats_part.get('hiddenSubscriberCount', False),
-            #  'subscribers': float(sub_count) if sub_count is not None else None,
-            #  'total_views': float(total_views) if total_views is not None else None,
-            #  'name': snippet_part.get('title'),
-            #  'image': snippet_part['thumbnails']['high']['url'],
-            #  'cover_image_url': None,
-            #  'likes': None,
-            #  'categories': None,}
+            # ++ # {'bio': snippet_part.get('description'),
+            # -- #  'videos': float(vid_count) if vid_count is not None else None,
+            # ++ #  'is_hidden_subscriber': stats_part.get('hiddenSubscriberCount', False),
+            # ++ #  'subscribers': float(sub_count) if sub_count is not None else None,
+            # ++ #  'total_views': float(total_views) if total_views is not None else None,
+            # ++ #  'name': snippet_part.get('title'),
+            # ++ #  'image': snippet_part['thumbnails']['high']['url'],
+            # ++ #  'cover_image_url': None,
+            #socialblade -- #  'likes': None,
+            # -- #  'categories': None,}
 
             if entry_result is not None and 'upload_date' in entry_result:
                 date_range_inherence = self.params.get('daterange', DateRange(start="00010101", end="99991231"))

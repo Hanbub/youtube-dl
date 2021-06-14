@@ -83,6 +83,17 @@ from ..utils import (
     xpath_with_ns,
 )
 
+class Error(Exception):
+    """Base class for other exceptions"""
+    pass
+
+class PremiereError(Error):
+    """Raised when the input value is too small"""
+    pass
+
+class LiveStreamError(Error):
+    """Raised when the input value is too large"""
+    pass
 
 class InfoExtractor(object):
     """Information Extractor class.
@@ -547,11 +558,11 @@ class InfoExtractor(object):
             raise
         # ==============================================================================================================
         # HAN LOOK HERE
-        except Exception as wtf:                             # ERROR CONTROL
-            if str(wtf).find('stream_live_running')!=-1:     # ERROR CONTROL
-                return                                       # ERROR CONTROL
-            elif str(wtf).find('premiere_scheduled') != -1:  # ERROR CONTROL
-                return                                       # ERROR CONTROL
+        except PremiereError:
+            return
+        except LiveStreamError:
+            return
+
         except compat_http_client.IncompleteRead as e:
             raise ExtractorError('A network error has occurred.', cause=e, expected=True)
         except (KeyError, StopIteration) as e:

@@ -10,7 +10,7 @@ import re
 import traceback
 from datetime import datetime, timedelta
 
-from .common import InfoExtractor, SearchInfoExtractor
+from .common import InfoExtractor, SearchInfoExtractor, PremiereError, LiveStreamError#, Error
 from ..compat import (
     compat_chr,
     compat_HTTPError,
@@ -46,6 +46,7 @@ from ..utils import (
     urlencode_postdata,
     urljoin,
 )
+
 
 def from_timeago_to_date(timeago):
     now_now = datetime.now()
@@ -1541,10 +1542,10 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
             and 'liveStreamability' in playability_status:
             if playability_status['status'] == 'LIVE_STREAM_OFFLINE':
                 self.to_screen(f"[live_stream_premiere] {playability_status['status']}")
-                raise Exception(f'{url} premiere_scheduled')
+                raise PremiereError
             else:
                 self.to_screen(f"[live_stream_online] {playability_status['status']}")
-                raise Exception(f'{url} stream_live_running')
+                raise LiveStreamError
         # -------------------------------------
 
         if playability_status.get('reason') == 'Sign in to confirm your age':
