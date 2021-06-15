@@ -1539,8 +1539,7 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
         # -------------------------------------
         # HAN LOOK HERE (focus on _download_webpage) #fix tabs | custome exceptions
         # todo: check playbility status, if premiere return dict of what we know already and mark it as premier so we can skip it later
-        if 'status' in playability_status  \
-            and 'liveStreamability' in playability_status:
+        if 'status' in playability_status and 'liveStreamability' in playability_status:
             if playability_status['status'] == 'LIVE_STREAM_OFFLINE':
                 self.to_screen(f"[live_stream_premiere] {playability_status['status']}")
                 raise PremiereError
