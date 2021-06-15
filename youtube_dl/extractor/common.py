@@ -88,11 +88,11 @@ class Error(Exception):
     pass
 
 class PremiereError(Error):
-    """Raised when the input value is too small"""
+    """Raised when premiere of video found in channel"""
     pass
 
 class LiveStreamError(Error):
-    """Raised when the input value is too large"""
+    """Raised when livestream found in channel"""
     pass
 
 class InfoExtractor(object):
@@ -550,10 +550,6 @@ class InfoExtractor(object):
                     if self.__maybe_fake_ip_and_retry(e.countries):
                         continue
                     raise
-                # HAN LOOK HERE
-                #except Exception as stream_premiere:
-                #    if stream_premiere=='stream_live_running':
-                #        return {'id':url}
         except ExtractorError:
             raise
         # ==============================================================================================================

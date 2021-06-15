@@ -49,6 +49,7 @@ from ..utils import (
 
 
 def from_timeago_to_date(timeago):
+    timeago = timeago.replace("Streamed ", "")
     now_now = datetime.now()
     if "ago" in timeago:
         time_components = timeago.replace(" ago", "").split(" ")
